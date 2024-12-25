@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { HomeScreen } from '../components/pages/home/HomeScreen';
-import { LoginScreen } from '../components/pages/login/LoginScreen';
+import { LoginScreen } from '../components/pages/auth/login/LoginScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -17,7 +17,7 @@ export function Navigation() {
 
 export function MyTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator  screenOptions={{ headerShown: false }}>
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Profile" component={LoginScreen} />
     </Tab.Navigator>
