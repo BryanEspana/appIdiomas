@@ -13,13 +13,9 @@ import { CustomImage } from '../../atoms/CustomImage'
 
 export const HomeScreen = () => {
   const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [number, setNumber] = useState('');
-
   return (
     <View>
       <Text>HomeScreen</Text>
-
         <CustomButton title="Presionar" 
          icon={faUser}
          iconPosition="left"
