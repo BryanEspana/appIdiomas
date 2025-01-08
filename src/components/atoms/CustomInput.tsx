@@ -123,14 +123,12 @@ export const CustomTextInput: React.FC<CustomTextInputProps> = ({
 const styles = StyleSheet.create({
   container: {
     marginVertical: 8,
-    marginHorizontal: 16,
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
+    paddingLeft: 10,
     fontSize: 16,
     color: '#333',
     backgroundColor: '#fff',
