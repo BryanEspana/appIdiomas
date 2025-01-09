@@ -1,26 +1,14 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HomeScreen } from '../components/pages/home/HomeScreen';
 import { Routes } from './routes';
+import { HomeScreen } from '../components/pages/home/HomeScreen';
+import { PrivateTabParamList } from '../core/interfaces/types';
 
-const PrivateStack = createStackNavigator();
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<PrivateTabParamList>();
 
-// Tab Navigator (Home y Profile)
-function TabNavigator() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name={Routes.PRIVATE.HOME} component={HomeScreen} />
-    </Tab.Navigator>
-  );
-}
-
-// Stack Navigator para las rutas privadas
 export function PrivateNavigator() {
   return (
-    <PrivateStack.Navigator screenOptions={{ headerShown: false }}>
-      <PrivateStack.Screen name="MainTabs" component={TabNavigator} />
-    </PrivateStack.Navigator>
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Screen name={Routes.PRIVATE.HOME} component={HomeScreen} />
+    </Tab.Navigator>
   );
 }
