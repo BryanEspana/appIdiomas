@@ -1,21 +1,33 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { CustomButton } from '../../../atoms/CustomButton';
-import { CustomImage } from '../../../atoms/CustomImage';
 import { CustomTextInput } from '../../../atoms/CustomInput';
 import { CustomLabel } from '../../../atoms/CustomLabel';
-import { CustomDatePicker } from '../../../atoms/CustomDatePicker';
+import CustomDatePicker from '../../../atoms/CustomDatePicker';
+import { useNavigation } from '@react-navigation/native';
+import { Routes } from '../../../../navigators/routes';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PublicStackParamList } from '../../../../core/interfaces/types';
 
 export const RegisterScreen = () => {
-
+    type PublicNavigationProp = StackNavigationProp<PublicStackParamList>;
+    const navigationPage = useNavigation<PublicNavigationProp>();
+  
 
     //useStates
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
-    const [country, setCountry] = useState('');
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+
+    const handleDateChange = (newDate: React.SetStateAction<Date>) => {
+      setSelectedDate(newDate);
+    };
+  
+    const handleBack = () => {
+      navigationPage.goBack();
+    };
     
  return (
      <View style={styles.container}>
@@ -35,7 +47,6 @@ export const RegisterScreen = () => {
            validationType="text"
            errorMessage="El nombre debe de ser válido"
          />
- 
          
          <CustomLabel text='Correo electrónico' />
          <CustomTextInput
@@ -75,31 +86,37 @@ export const RegisterScreen = () => {
            secureTextEntry
          />
 
-          <CustomDatePicker
-            label="Select your birth date"
+         <CustomLabel text='Escribe tu fecha de nacimiento'/>
+         <CustomDatePicker
             value={selectedDate}
-            onChange={(date) => setSelectedDate(date)}
-            minimumDate={new Date(1900, 0, 1)}
-            maximumDate={new Date()} 
-            format="DD-MM-YYYY"
+            onDateChange={handleDateChange}
+            placeholder="Haz clic para seleccionar una fecha"
+         />
+
+         <CustomLabel text='País' />
+          <CustomTextInput
+            placeholder="Introduce tu país"
+            value={name}
+            onChangeText={(text) => {
+              setName(text);
+              setError('');
+            }}
+            validationType="text"
+            errorMessage="El país debe de ser válido"
           />
  
          <CustomButton 
-           title='Iniciar sesión'
+           title='Registrarse'
            onPress={() => {}}
          />
  
-         <View style={styles.containerRow}>
+         <View style={styles.center}>
            <CustomLabel 
-             text='¿Olvidaste tu contraseña?' 
+             text='¿Ya tienes una cuenta?' 
              color='blue'  
-             onPress={()=>{}}
-           />
-           <CustomLabel 
-             text='¿No tienes cuenta?' 
-             color='blue' 
-             onPress={()=>{}}
-           />
+             onPress={handleBack}           
+             />
+    
          </View>
        </View>
      </View>
@@ -115,15 +132,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     },
     formContainer: {
-      width: "100%", // Haz que ocupe todo el ancho disponible
-      padding: 20, // Agrega espacio interno
-      marginTop: 20, // Espacio superior para separarlo de otros elementos
-      marginHorizontal: 20, // Margen horizontal para separarlo de los bordes
-      borderRadius: 10, // Bordes redondeados
-      backgroundColor: "#fff", // Fondo blanco para destacar el formulario
+      width: "100%",
+      padding: 20,
+      marginTop: 20,
+      marginHorizontal: 20, 
+      borderRadius: 10, 
+      backgroundColor: "#fff", 
     },
-    containerRow:{
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+    center: {
+      alignItems: 'center',
     }
+ 
 });

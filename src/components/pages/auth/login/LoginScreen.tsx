@@ -47,6 +47,7 @@ export const LoginScreen = () => {
   const handleRegister = () => {
     navigationPage.navigate(Routes.PUBLIC.REGISTER);
   };
+  
   return (
     <View style={styles.container}>
       <CustomImage source='https://picsum.photos/201' width={200} height={200} />
