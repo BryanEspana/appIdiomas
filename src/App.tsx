@@ -4,6 +4,7 @@ import 'react-native-gesture-handler';
 import { Button } from 'react-native';
 import { AuthProvider } from './context/auth/AuthContext';
 import { RootNavigator } from './navigators/RootNavigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const App = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);

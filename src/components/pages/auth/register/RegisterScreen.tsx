@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { CustomButton } from '../../../atoms/CustomButton';
-import { CustomTextInput } from '../../../atoms/CustomInput';
+import { CustomTextInput } from '../../../molecules/CustomTextInput';
 import { CustomLabel } from '../../../atoms/CustomLabel';
 import CustomDatePicker from '../../../atoms/CustomDatePicker';
 import { useNavigation } from '@react-navigation/native';

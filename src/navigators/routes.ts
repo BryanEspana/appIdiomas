@@ -7,6 +7,7 @@ export const Routes = {
   PRIVATE: {
     HOME: 'Home',
     PROFILE: 'Profile',
+    LESSONS: 'Lessons',
   },
 } as const;
 
