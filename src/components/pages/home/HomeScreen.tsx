@@ -6,16 +6,16 @@ import { CustomBarChart } from '../../atoms/Charts/BarCharts';
 import { CustomPieChart } from '../../atoms/Charts/PieCharts';
 import { CustomImage } from '../../atoms/CustomImage';
 import { LessonCard } from '../../organisms/LessonCards';
+import { CustomLoader } from '../../atoms/CustomLoader';
 export const HomeScreen = () => {
 
   //variables
-  const [password, setPassword] = useState('');
-
-
-  //Metodos para llamar a la API
+    const [isLoading, setIsLoading] = useState(true);
     const [lessons, setLessons] = useState<
     { id: number; image: string; name: string, description: string }[]
   >([]);
+
+  //Metodos para llamar a la API
 
   useEffect(() => {
     setTimeout(() => {
@@ -24,18 +24,21 @@ export const HomeScreen = () => {
         { id: 2, image: "https://picsum.photos/202", name: "Lección 2", description: 'Lección 2 lorem impsun' },
         { id: 3, image: "https://picsum.photos/203", name: "Lección 3", description: 'Lección 3 lorem impsun' },
       ]);
+       setIsLoading(false); 
     }, 1000);
   }, []);
-
-
 
   return (
     <ScrollView>
       <View style={styles.container}>
-        <View style={styles.containerRowSpaceBtw}> 
+         {isLoading ? (
+        <CustomLoader size="large" color="#007BFF" />
+      ) : (
+        <View>
+           <View style={styles.containerRowSpaceBtw}> 
           <CustomLabel 
             text='Tu progreso'
-            fontSize={20} 
+            fontSize={24} 
             onPress={()=>{}}/>
           <CustomLabel 
             text='Cambiar curso' 
@@ -99,7 +102,7 @@ export const HomeScreen = () => {
         {/*-------------------Lecciones-------------------------- */}
         <CustomLabel 
             text='Lecciones completas'
-            fontSize={20} 
+            fontSize={24} 
             onPress={()=>{}}/>
         <View >
        {lessons.map((lesson) => (
@@ -115,7 +118,7 @@ export const HomeScreen = () => {
          {/*-------------------Evaluaciones-------------------------- */}
         <CustomLabel 
             text='Evaluaciones completas'
-            fontSize={20} 
+            fontSize={24} 
             onPress={()=>{}}/>
         <View >
        {lessons.map((lesson) => (
@@ -128,6 +131,10 @@ export const HomeScreen = () => {
         />
       ))}
         </View>
+        </View>
+      )}
+      
+        
       </View>
     </ScrollView>
   )
