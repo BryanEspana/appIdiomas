@@ -8,6 +8,9 @@ export const Routes = {
     HOME: 'Home',
     PROFILE: 'Profile',
     LESSONS: 'Lessons',
+    LESSION_DETAIL: 'LessionDetail',
+    NOTIFICATIONS: 'Notifications',
+    
   },
 } as const;
 

@@ -4,6 +4,10 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { CustomImage } from '../atoms/CustomImage';
 import { CustomIcon } from '../atoms/CustomIcon';
 import { faBell } from '@fortawesome/free-solid-svg-icons'
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PublicStackParamList } from '../../core/interfaces/types';
+import { Routes } from '../../navigators/routes';
 
 
 type TopBarProps = {
@@ -15,6 +19,8 @@ type TopBarProps = {
   style?: StyleProp<ViewStyle>; // Estilo personalizado del contenedor
 };
 
+
+
 const TopBar: React.FC<TopBarProps> = ({
   title,
   onLeftPress,
@@ -23,6 +29,13 @@ const TopBar: React.FC<TopBarProps> = ({
   rightIcon = 'bars',
   style,
 }) => {
+
+    type PublicNavigationProp = StackNavigationProp<PublicStackParamList>;
+    const navigationPage = useNavigation<PublicNavigationProp>();
+
+    const handleNoti = () => {
+      //navigationPage.navigate(Routes.PRIVATE.NOTIFICATIONS);
+    }
   return (
     <View style={[styles.container, style]}>
       <CustomImage source='https://picsum.photos/201' width={50} height={50} />
@@ -31,7 +44,9 @@ const TopBar: React.FC<TopBarProps> = ({
         icon={faBell} 
         size={24} 
         color="#000" 
-        onPress={() => console.log('Icon pressed')} 
+        onPress={() => {
+
+        }} 
       />
     </View>
   );
