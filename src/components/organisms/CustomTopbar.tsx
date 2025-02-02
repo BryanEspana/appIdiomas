@@ -6,8 +6,8 @@ import { CustomIcon } from '../atoms/CustomIcon';
 import { faBell } from '@fortawesome/free-solid-svg-icons'
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { PublicStackParamList } from '../../core/interfaces/types';
 import { Routes } from '../../navigators/routes';
+import { ProfileStackParamList } from '../../core/interfaces/types';
 
 
 type TopBarProps = {
@@ -20,6 +20,7 @@ type TopBarProps = {
 };
 
 
+type MainStackNav = StackNavigationProp<any, "Notifications">;
 
 const TopBar: React.FC<TopBarProps> = ({
   title,
@@ -30,11 +31,10 @@ const TopBar: React.FC<TopBarProps> = ({
   style,
 }) => {
 
-    type PublicNavigationProp = StackNavigationProp<PublicStackParamList>;
-    const navigationPage = useNavigation<PublicNavigationProp>();
+  const navigation = useNavigation<MainStackNav>();
 
     const handleNoti = () => {
-      //navigationPage.navigate(Routes.PRIVATE.NOTIFICATIONS);
+      navigation.navigate("Notifications");
     }
   return (
     <View style={[styles.container, style]}>
@@ -44,9 +44,7 @@ const TopBar: React.FC<TopBarProps> = ({
         icon={faBell} 
         size={24} 
         color="#000" 
-        onPress={() => {
-
-        }} 
+        onPress={handleNoti}
       />
     </View>
   );

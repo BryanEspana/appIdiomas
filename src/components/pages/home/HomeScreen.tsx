@@ -7,6 +7,9 @@ import { CustomPieChart } from '../../atoms/Charts/PieCharts';
 import { CustomImage } from '../../atoms/CustomImage';
 import { LessonCard } from '../../organisms/LessonCards';
 import { CustomLoader } from '../../atoms/CustomLoader';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { ProfileStackParamList } from '../../../core/interfaces/types';
 export const HomeScreen = () => {
 
   //variables
@@ -16,6 +19,7 @@ export const HomeScreen = () => {
   >([]);
 
   //Metodos para llamar a la API
+    const navigation = useNavigation<StackNavigationProp<ProfileStackParamList>>();
 
   useEffect(() => {
     setTimeout(() => {
@@ -44,7 +48,9 @@ export const HomeScreen = () => {
             text='Cambiar curso' 
             color='blue'  
             fontSize={14}
-            onPress={()=>{}}/>  
+            onPress={()=>{
+              navigation.navigate('Notifications');
+            }}/>  
         </View>
         {/*-------------------Gráficos-------------------------- */}
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
