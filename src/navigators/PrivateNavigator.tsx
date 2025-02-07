@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { SafeAreaView } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
@@ -51,22 +51,30 @@ function ProfileStackScreen() {
 export function PrivateMainNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Privates" component={PrivateNavigator} />
-      <Stack.Screen name="Notifications" component={NotificationScreen} options={{ headerShown: true, title: "Notificaciones" }}  />
+      <Stack.Screen name="Tabs" component={PrivateNavigator} />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationScreen}
+        options={{ headerShown: true, title: "Notificaciones" }}
+      />
     </Stack.Navigator>
   );
 }
-
 export function PrivateNavigator() {
   type MainStackNav = StackNavigationProp<any, "Notifications">;
   
     const navigation = useNavigation<MainStackNav>();
 
-    const handleNoti = () => {
+    const handleNoti = useCallback(() => {
       navigation.navigate("Notifications");
       console.log("Notificaciones");
-    }
+    }, [navigation]);
 
+  const tabIcons: any = {
+    [Routes.PRIVATE.HOME]: faHome,
+    [Routes.PRIVATE.LESSONS]: faBook,
+    [Routes.PRIVATE.PROFILE]: faUser,
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
         <TopBar
@@ -75,41 +83,19 @@ export function PrivateNavigator() {
           onRightPress={() => console.log("Right Button Pressed")}
           handleNotification={handleNoti}
         />
-        <Tab.Navigator
+      <Tab.Navigator
         screenOptions={({ route }) => ({
           headerShown: false,
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            // Asignar icono basado en la ruta
-            switch (route.name) {
-              case Routes.PRIVATE.HOME:
-                iconName = faHome;
-                break;
-              case Routes.PRIVATE.LESSONS:
-                iconName = faBook;
-                break;
-              case Routes.PRIVATE.PROFILE:
-                iconName = faUser;
-                break;
-              default:
-                iconName = faHome;
-            }
-
-            // Retorna el CustomIcon con los estilos dinámicos
-            return (
-              <CustomIcon
-                icon={iconName}
-                size={size || 20}
-                color={focused ? "#007BFF" : "#999"}
-              />
-            );
-          },
-          tabBarActiveTintColor: "#007BFF", // Color del texto cuando está activo
-          tabBarInactiveTintColor: "#999", // Color del texto cuando no está activo
-        })}
-        
-      >
+          tabBarIcon: ({ focused, color, size }) => (
+            <CustomIcon
+              icon={tabIcons[route.name] || faHome}
+              size={size || 20}
+              color={focused ? "#007BFF" : "#999"}
+            />
+          ),
+          tabBarActiveTintColor: "#007BFF",
+          tabBarInactiveTintColor: "#999",
+        })}>
           <Tab.Screen name={Routes.PRIVATE.HOME} component={HomeStackScreen} />
           <Tab.Screen name={Routes.PRIVATE.LESSONS} component={LessonsStackScreen} />
           <Tab.Screen name={Routes.PRIVATE.PROFILE} component={ProfileStackScreen} />
