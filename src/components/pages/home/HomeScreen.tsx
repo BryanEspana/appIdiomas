@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import {Dimensions, ScrollView, StyleSheet, View } from 'react-native'
+import {ScrollView, StyleSheet, View } from 'react-native'
 import { CustomLabel } from '../../atoms/CustomLabel'
-import { CustomLineChart } from '../../atoms/Charts/LineCharts';
-import { CustomBarChart } from '../../atoms/Charts/BarCharts';
 import { CustomPieChart } from '../../atoms/Charts/PieCharts';
-import { CustomImage } from '../../atoms/CustomImage';
 import { LessonCard } from '../../organisms/LessonCards';
 import { CustomLoader } from '../../atoms/CustomLoader';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ProfileStackParamList } from '../../../core/interfaces/types';
+import { HomeStackParamList, ProfileStackParamList } from '../../../core/interfaces/types';
 export const HomeScreen = () => {
 
   //variables
-    const [isLoading, setIsLoading] = useState(true);
-    const [lessons, setLessons] = useState<
+  const [isLoading, setIsLoading] = useState(true);
+  const [lessons, setLessons] = useState<
     { id: number; image: string; name: string, description: string }[]
   >([]);
 
-  //Metodos para llamar a la API
-    const navigation = useNavigation<StackNavigationProp<ProfileStackParamList>>();
+  type LessionDetailsRouteProp = RouteProp<{ LessionDetails: { lessonId: number } }, 'LessionDetails'>;
+
+  const navigation = useNavigation<StackNavigationProp<HomeStackParamList>>();
+
+    const handleLessionPress = (id: number) => {
+    console.log(`Seleccionaste la lección ${id}`);
+      navigation.navigate('LessionDetails', { lessonId: id });
+
+    }
 
   useEffect(() => {
     setTimeout(() => {
@@ -48,9 +52,7 @@ export const HomeScreen = () => {
             text='Cambiar curso' 
             color='blue'  
             fontSize={14}
-            onPress={()=>{
-              navigation.navigate('Notifications');
-            }}/>  
+            />  
         </View>
         {/*-------------------Gráficos-------------------------- */}
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -117,7 +119,7 @@ export const HomeScreen = () => {
           imageSource={lesson.image}
           descriptionLesson={lesson.description}
           lessonName={lesson.name}
-          onPress={() => console.log(`Seleccionaste ${lesson.name}`)}
+          onPress={() => handleLessionPress(lesson.id)}
         />
       ))}
         </View>

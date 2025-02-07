@@ -3,7 +3,7 @@ import { Routes } from "../../navigators/routes";
 // Definir los parámetros para el Stack de Home
 export type HomeStackParamList = {
   HomeStack: undefined;
-  // Otras pantallas dentro del HomeStack
+  LessionDetails: { lessonId: number };
 };
 
 // Definir los parámetros para el Stack de Lessons

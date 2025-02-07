@@ -17,6 +17,7 @@ type TopBarProps = {
   leftIcon?: IconProp; // Ícono del botón izquierdo (nombre de ícono FontAwesome)
   rightIcon?: IconProp; // Ícono del botón derecho (nombre de ícono FontAwesome)
   style?: StyleProp<ViewStyle>; // Estilo personalizado del contenedor
+  handleNotification?: () => void;
 };
 
 
@@ -28,14 +29,12 @@ const TopBar: React.FC<TopBarProps> = ({
   onRightPress,
   leftIcon = 'arrow-left',
   rightIcon = 'bars',
+  handleNotification,
   style,
 }) => {
 
-  const navigation = useNavigation<MainStackNav>();
 
-    const handleNoti = () => {
-      navigation.navigate("Notifications");
-    }
+  
   return (
     <View style={[styles.container, style]}>
       <CustomImage source='https://picsum.photos/201' width={50} height={50} />
@@ -44,7 +43,7 @@ const TopBar: React.FC<TopBarProps> = ({
         icon={faBell} 
         size={24} 
         color="#000" 
-        onPress={handleNoti}
+        onPress={handleNotification}
       />
     </View>
   );
