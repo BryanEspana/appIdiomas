@@ -17,13 +17,6 @@ export const HomeScreen = () => {
 
   type LessionDetailsRouteProp = RouteProp<{ LessionDetails: { lessonId: number } }, 'LessionDetails'>;
 
-  const navigation = useNavigation<StackNavigationProp<HomeStackParamList>>();
-
-    const handleLessionPress = (id: number) => {
-    console.log(`Seleccionaste la lección ${id}`);
-      navigation.navigate('LessionDetails', { lessonId: id });
-
-    }
 
   useEffect(() => {
     setTimeout(() => {
@@ -119,7 +112,7 @@ export const HomeScreen = () => {
           imageSource={lesson.image}
           descriptionLesson={lesson.description}
           lessonName={lesson.name}
-          onPress={() => handleLessionPress(lesson.id)}
+          
         />
       ))}
         </View>

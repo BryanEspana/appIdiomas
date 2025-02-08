@@ -9,6 +9,7 @@ export const Routes = {
     PROFILE: 'Profile',
     LESSONS: 'Lessons',
     LESSION_DETAIL: 'LessionDetails',
+    EVALUATION: 'Evaluation',
     NOTIFICATIONS: 'Notifications',
     
   },

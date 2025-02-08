@@ -12,6 +12,7 @@ import { faHome, faBook, faUser } from '@fortawesome/free-solid-svg-icons';
 import NotificationScreen from "../components/pages/Perfil/Notifications";
 import { useNavigation } from "@react-navigation/native";
 import LessionDetailsScreen from "../components/pages/lecciones/LeccionDetail";
+import EvaluacionesScreen from "../components/pages/evaluaciones/evaluacionScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,7 +25,6 @@ function HomeStackScreen() {
   return (
     <HomeStack.Navigator screenOptions={{ headerShown: false }}>
       <HomeStack.Screen name="HomeStack" component={HomeScreen} />
-      <HomeStack.Screen name={Routes.PRIVATE.LESSION_DETAIL} component={LessionDetailsScreen} />
       
     </HomeStack.Navigator>
   );
@@ -35,6 +35,9 @@ function LessonsStackScreen() {
   return (
     <LessonsStack.Navigator screenOptions={{ headerShown: false }}>
       <LessonsStack.Screen name="LessonsStack" component={LeccionesScreen} />
+      <LessonsStack.Screen name={Routes.PRIVATE.LESSION_DETAIL} component={LessionDetailsScreen} />
+      <LessonsStack.Screen name={Routes.PRIVATE.EVALUATION} component={EvaluacionesScreen} />
+
     </LessonsStack.Navigator>
   );
 }

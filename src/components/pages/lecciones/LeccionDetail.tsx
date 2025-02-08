@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         width: '100%',
         marginTop: 20,
         padding: 20,
-        alignItems: 'center',
+        alignItems: 'flex-start',
     },
     progressLabel: {
         fontSize: 18,

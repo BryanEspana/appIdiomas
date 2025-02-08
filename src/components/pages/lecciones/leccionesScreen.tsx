@@ -7,13 +7,17 @@ import { CustomIcon } from '../../atoms/CustomIcon';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import * as Progress from 'react-native-progress';
 import CustomLoader from '../../atoms/CustomLoader';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { HomeStackParamList, LessonsStackParamList } from '../../../core/interfaces/types';
 
 const LeccionesScreen = () => {
 
     //variables
     const screenWidth = Dimensions.get('window').width;
     const [isLoading, setIsLoading] = useState(true);
-      
+    const navigation = useNavigation<StackNavigationProp<LessonsStackParamList>>();
+
 
      //Metodos para llamar a la API
         const [lessons, setLessons] = useState<
@@ -30,7 +34,19 @@ const LeccionesScreen = () => {
           setIsLoading(false);
         }, 1000);
       }, []);
-    
+
+      const handleLessionPress = (id: number) => {
+      console.log(`Seleccionaste la lección ${id}`);
+        navigation.navigate('LessionDetails', { lessonId: id });
+  
+      }
+
+      const handleEvaluationPress = (id: number) => {
+      console.log(`Seleccionaste la evaluacion ${id}`);
+        navigation.navigate('Evaluation', { evaluationId: id });
+  
+      }
+      
     return (
         <ScrollView>
              <View style={styles.container}>
@@ -80,8 +96,7 @@ const LeccionesScreen = () => {
                     imageSource={lesson.image}
                     descriptionLesson={lesson.description}
                     lessonName={lesson.name}
-                    onPress={() => console.log(`Seleccionaste ${lesson.name}`)}
-                    onButtonPress={() => console.log("Ingresar a la lección")}
+                    onPress={() => handleLessionPress(lesson.id)}
                />
              ))}
                </View>
@@ -91,13 +106,13 @@ const LeccionesScreen = () => {
                    fontSize={24} 
                    onPress={()=>{}}/>
                <View >
-              {lessons.map((lesson) => (
+              {lessons.map((evaluations) => (
                <LessonCard
-                 key={lesson.id}
-                 imageSource={lesson.image}
-                 lessonName={lesson.name}
-                 descriptionLesson={lesson.description}
-                 onButtonPress={() => console.log("Ingresar a la lección")}
+                 key={evaluations.id}
+                 imageSource={evaluations.image}
+                 lessonName={evaluations.name}
+                 descriptionLesson={evaluations.description}
+                 onPress={() => handleEvaluationPress(evaluations.id)}
                />
              ))}
                </View>

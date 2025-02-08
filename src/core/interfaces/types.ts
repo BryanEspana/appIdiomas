@@ -3,12 +3,13 @@ import { Routes } from "../../navigators/routes";
 // Definir los parámetros para el Stack de Home
 export type HomeStackParamList = {
   HomeStack: undefined;
-  LessionDetails: { lessonId: number };
 };
 
 // Definir los parámetros para el Stack de Lessons
 export type LessonsStackParamList = {
   LessonsStack: undefined;
+  LessionDetails: { lessonId: number };
+  Evaluation: { evaluationId: number };
   // Otras pantallas dentro del LessonsStack
 };
 
