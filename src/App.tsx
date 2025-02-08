@@ -1,12 +1,28 @@
-import { NavigationContainer } from '@react-navigation/native'
-import React from 'react'
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import React, { useState } from 'react';
 import 'react-native-gesture-handler';
-import { MyTabs, Navigation } from './navigators/Navigation';
+import { Button } from 'react-native';
+import { AuthProvider } from './context/auth/AuthContext';
+import { RootNavigator } from './navigators/RootNavigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const App = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const theme = isDarkMode ? DefaultTheme : DefaultTheme;
+
   return (
-    <NavigationContainer>
-      <MyTabs />
-    </NavigationContainer>
-  )
-}
+    <AuthProvider>
+      <NavigationContainer theme={theme}>
+        <RootNavigator />
+        {/*
+        <Button 
+          title="Cambiar Tema" 
+          onPress={() => setIsDarkMode(!isDarkMode)} 
+        />
+        */}
+      </NavigationContainer>
+    </AuthProvider>
+  );
+};
+
+export default App;
