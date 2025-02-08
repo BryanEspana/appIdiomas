@@ -13,6 +13,7 @@ import NotificationScreen from "../components/pages/Perfil/Notifications";
 import { useNavigation } from "@react-navigation/native";
 import LessionDetailsScreen from "../components/pages/lecciones/LeccionDetail";
 import EvaluacionesScreen from "../components/pages/evaluaciones/evaluacionScreen";
+import ResultadosScreen from "../components/pages/evaluaciones/resultsEvaluation";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,6 +38,7 @@ function LessonsStackScreen() {
       <LessonsStack.Screen name="LessonsStack" component={LeccionesScreen} />
       <LessonsStack.Screen name={Routes.PRIVATE.LESSION_DETAIL} component={LessionDetailsScreen} />
       <LessonsStack.Screen name={Routes.PRIVATE.EVALUATION} component={EvaluacionesScreen} />
+      <LessonsStack.Screen name={Routes.PRIVATE.RESULT_EVALUATION} component={ResultadosScreen} />
 
     </LessonsStack.Navigator>
   );

@@ -1,34 +1,56 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Slider from "@react-native-community/slider";
 import Sound from "react-native-sound";
-import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
+import { faVolumeUp, faPlay, faPause } from "@fortawesome/free-solid-svg-icons";
 import { CustomIcon } from "../atoms/CustomIcon";
 
-const SoundBar = () => {
+interface SoundBarProps {
+  audioSource?: string;
+}
+
+const SoundBar: React.FC<SoundBarProps> = ({ audioSource }) => {
   const [volume, setVolume] = useState(0.5);
   const [sound, setSound] = useState<Sound | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    Sound.setCategory("Playback"); // Para permitir sonido en segundo plano
+    if (!audioSource) return;
 
-    const newSound = new Sound("sound.mp3", Sound.MAIN_BUNDLE, (error) => {
+    Sound.setCategory("Playback");
+
+    const newSound = new Sound(audioSource, Sound.MAIN_BUNDLE, (error) => {
       if (error) {
         console.log("Error al cargar el sonido", error);
         return;
       }
       newSound.setVolume(volume);
-      newSound.play(); // Opcional, si quieres que se reproduzca al iniciar
+      setSound(newSound);
     });
-
-    setSound(newSound);
 
     return () => {
       if (newSound) {
         newSound.release();
       }
     };
-  }, []);
+  }, [audioSource]);
+
+  const togglePlayPause = () => {
+    if (!sound) return;
+
+    if (isPlaying) {
+      sound.pause();
+    } else {
+      sound.play((success) => {
+        if (!success) {
+          console.log("Error al reproducir el audio");
+        }
+        setIsPlaying(false);
+      });
+    }
+
+    setIsPlaying(!isPlaying);
+  };
 
   const handleVolumeChange = (value: number) => {
     setVolume(value);
@@ -39,18 +61,23 @@ const SoundBar = () => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={togglePlayPause}>
         <CustomIcon
-            icon={faVolumeUp}
-            size={20}
-            color={"#000000"}
-            />
-        <Slider
+          icon={isPlaying ? faPause : faPlay}
+          size={20}
+          color={"#000000"}
+        />
+      </TouchableOpacity>
+
+      <Slider
         style={styles.slider}
         minimumValue={0}
         maximumValue={1}
         value={volume}
         onValueChange={handleVolumeChange}
       />
+
+      <CustomIcon icon={faVolumeUp} size={20} color={"#000000"} />
     </View>
   );
 };
@@ -64,7 +91,7 @@ const styles = StyleSheet.create({
   },
   slider: {
     flex: 1,
-    marginLeft: 10,
+    marginHorizontal: 10,
   },
 });
 

@@ -10,7 +10,7 @@ export type LessonsStackParamList = {
   LessonsStack: undefined;
   LessionDetails: { lessonId: number };
   Evaluation: { evaluationId: number };
-  // Otras pantallas dentro del LessonsStack
+  ResultEvaluation: { resultados: any[] };
 };
 
 // Definir los parámetros para el Stack de Profile
@@ -21,14 +21,14 @@ export type ProfileStackParamList = {
 
 // Definir los parámetros para el BottomTabNavigator
 export type PrivateTabParamList = {
-  Home: undefined; // Corresponde al HomeStack
-  Lessons: undefined; // Corresponde al LessonsStack
-  Profile: undefined; // Corresponde al ProfileStack
+  Home: undefined; 
+  Lessons: undefined; 
+  Profile: undefined; 
 };
 
 // Definir los parámetros para el Stack de Navegación Pública
 export type PublicStackParamList = {
-  Login: undefined; // Pantalla de inicio de sesión
-  Register: undefined; // Pantalla de registro
-  ForgotPassword: undefined; // Pantalla de recuperación de contraseña
+  Login: undefined; 
+  Register: undefined; 
+  ForgotPassword: undefined;
 };

@@ -10,6 +10,7 @@ export const Routes = {
     LESSONS: 'Lessons',
     LESSION_DETAIL: 'LessionDetails',
     EVALUATION: 'Evaluation',
+    RESULT_EVALUATION: 'ResultEvaluation',
     NOTIFICATIONS: 'Notifications',
     
   },

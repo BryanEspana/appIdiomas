@@ -1,84 +1,136 @@
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Alert, TouchableOpacity, TextInput } from 'react-native';
 import { CustomImage } from '../../atoms/CustomImage';
 import SoundBar from '../../molecules/soundBar';
 import * as Progress from 'react-native-progress';
-
-type EvaluacionRouteProp = RouteProp<{ Evaluation: { evaluationId: number } }, 'Evaluation'>;
+import { CustomIcon } from '../../atoms/CustomIcon';
+import { faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { LessonsStackParamList } from '../../../core/interfaces/types';
 
 const preguntas = [
     {
         id: 1,
+        tipo: 'seleccion',
         texto: '¿Cuál es la traducción del audio?',
         opciones: ['Hello World', 'Hola Mundo', 'Hola tierra '],
         respuestaCorrecta: 0,
+        imagen: 'https://picsum.photos/200',
+        audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
     },
     {
         id: 2,
+        tipo: 'seleccion',
         texto: '¿Qué significa "Hello" en español?',
         opciones: ['Adiós', 'Hola', 'Gracias'],
         respuestaCorrecta: 1,
+        imagen: 'https://picsum.photos/201',
+        audio: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
     },
     {
-        id: 2,
-        texto: '¿Qué significa "Word" en español?',
-        opciones: ['Mundo', 'Tierra', 'Planeta'],
-        respuestaCorrecta: 0,
+        id: 3,
+        tipo: 'imagen',
+        imagen: 'https://picsum.photos/202'
+    },
+    {
+        id: 4,
+        tipo: 'escrito',
+        texto: '¿Cómo se llama este objeto en inglés?',
+        imagen: 'https://picsum.photos/203',
+        respuestaCorrecta: 'dog'
     }
 ];
 
 const EvaluacionesScreen = () => {
-    const route = useRoute<EvaluacionRouteProp>();
-    const [indicePregunta, setIndicePregunta] = useState(0);
     const [respuestaSeleccionada, setRespuestaSeleccionada] = useState<number | null>(null);
+    const [respuestaEscrita, setRespuestaEscrita] = useState('');
+    const navigation = useNavigation<StackNavigationProp<LessonsStackParamList>>();
+    const [resultados, setResultados] = useState<any[]>([]);
+    const [indicePregunta, setIndicePregunta] = useState(0);
     const [progreso, setProgreso] = useState(0);
+
+    const route = useRoute();
+
     const preguntaActual = preguntas[indicePregunta];
     const totalPreguntas = preguntas.length;
-    const { evaluationId } = route.params;
-    const imageSource = "https://picsum.photos/201";
-    const [progress, setProgress] = useState(0.3); // Simulación del progreso (40%)
+    
+   const manejarSiguiente = () => {
+    let esCorrecta = false;
 
-     const manejarSiguiente = () => {
-        if (indicePregunta < totalPreguntas - 1) {
-            setIndicePregunta(indicePregunta + 1);
-            setRespuestaSeleccionada(null);
-            setProgreso((indicePregunta + 1) / totalPreguntas);
-        } else {
-            Alert.alert('Evaluación completa', 'Has completado la evaluación');
-        }
-    };
+    if (preguntaActual.tipo === 'seleccion' && respuestaSeleccionada !== null) {
+        esCorrecta = respuestaSeleccionada === preguntaActual.respuestaCorrecta;
+    } else if (preguntaActual.tipo === 'escrito') {
+        esCorrecta = preguntaActual.respuestaCorrecta !== undefined && typeof preguntaActual.respuestaCorrecta === 'string' && respuestaEscrita.trim().toLowerCase() === preguntaActual.respuestaCorrecta.toLowerCase();
+    }
+
+    setResultados(prevResultados => [
+        ...prevResultados,
+        { id: preguntaActual.id, pregunta: preguntaActual.texto, correcta: esCorrecta }
+    ]);
+
+    if (indicePregunta < totalPreguntas - 1) {
+        setIndicePregunta(indicePregunta + 1);
+        setRespuestaSeleccionada(null);
+        setRespuestaEscrita('');
+        setProgreso((indicePregunta + 1) / totalPreguntas);
+    } else {
+        navigation.navigate('ResultEvaluation', { resultados });
+    }
+};
     
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Pregunta #{preguntaActual.id}</Text>
-            <Text style={styles.question}>{preguntaActual.texto}</Text>
-            <CustomImage source={'https://picsum.photos/200'} width={250} height={150} />
-            <SoundBar />
-            <Text>¿Cual es la traducción del audio?</Text>
-            {/* Opciones de respuesta */}
-            {preguntaActual.opciones.map((opcion, index) => (
-                <TouchableOpacity
-                    key={index}
-                    style={[
-                        styles.option,
-                        respuestaSeleccionada === index && styles.selectedOption
-                    ]}
-                    onPress={() => setRespuestaSeleccionada(index)}
-                >
-                    <Text>{opcion}</Text>
-                </TouchableOpacity>
-            ))}
+
+            {preguntaActual.tipo === 'seleccion' ? (
+                <>
+                    <Text style={styles.question}>{preguntaActual.texto}</Text>
+                    <CustomImage source={preguntaActual.imagen} width={250} height={150} />
+                    <SoundBar audioSource={preguntaActual.audio} />
+                    {preguntaActual.opciones && preguntaActual.opciones.map((opcion, index) => (
+                        <TouchableOpacity
+                            key={index}
+                            style={[
+                                styles.option,
+                                respuestaSeleccionada === index && styles.selectedOption
+                            ]}
+                            onPress={() => setRespuestaSeleccionada(index)}
+                        >
+                            <Text>{opcion}</Text>
+                        </TouchableOpacity>
+                    ))}
+                </>
+            ) : preguntaActual.tipo === 'imagen' ? (
+                <>
+                    <CustomImage source={preguntaActual.imagen} width={250} height={150} />
+                    <Text style={styles.question}>Pronuncia lo que ves en la imagen</Text>
+                    <TouchableOpacity style={styles.micButton}>
+                        <CustomIcon icon={faMicrophone} size={32} color="#fff" />
+                    </TouchableOpacity>
+                </>
+            ) : preguntaActual.tipo === 'escrito' ? (
+                <>
+                    <Text style={styles.question}>{preguntaActual.texto}</Text>
+                    <CustomImage source={preguntaActual.imagen} width={250} height={150} />
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="Escribe tu respuesta aquí"
+                        value={respuestaEscrita}
+                        onChangeText={setRespuestaEscrita}
+                    />
+                </>
+            ) : null}
             
             <TouchableOpacity
                 style={styles.button}
                 onPress={manejarSiguiente}
-                disabled={respuestaSeleccionada === null}
             >
-                <Text style={styles.buttonText}>Siguiente Pregunta</Text>
+                <Text style={styles.buttonText}>
+                    {indicePregunta < totalPreguntas - 1 ? 'Siguiente Pregunta' : 'Finalizar'}
+                </Text>
             </TouchableOpacity>
-
-            {/* Progreso */}
+            
             <View style={styles.progressContainer}>
                 <Text style={styles.progressLabel}>Progreso de la evaluación</Text>
                 <Progress.Bar progress={progreso} color="#000" width={370} height={12} />
@@ -133,6 +185,24 @@ const styles = StyleSheet.create({
     progressLabel: {
         fontSize: 16,
         marginBottom: 5,
+    },
+    micButton: {
+        marginTop: 20,
+        padding: 15,
+        backgroundColor: '#ff5733',
+        borderRadius: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    textInput: {
+        width: '90%',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 10,
+        padding: 10,
+        marginVertical: 10,
+        fontSize: 16,
+        textAlign: 'center',
     }
 });
 
