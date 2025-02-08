@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { CustomLabel } from '../../atoms/CustomLabel';
 import { CustomAvatar } from '../../atoms/CustomAvatar';
 import { CustomTextInput } from '../../molecules/CustomTextInput';
+import { CustomButton } from '../../atoms/CustomButton';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { LessonsStackParamList } from '../../../core/interfaces/types';
+import { Routes } from '../../../navigators/routes';
+import { useAuth } from '../../../context/auth/AuthContext';
 
 const PerfilScreen = () => {
+    const navigation = useNavigation<StackNavigationProp<any>>();
 
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [date, setDate] = useState('');
     const [error, setError] = useState('');
     
+  const { logout } = useAuth();
 
     return (
         <ScrollView>
@@ -57,6 +65,12 @@ const PerfilScreen = () => {
                         validationType="text"
                         errorMessage="El correo debe de ser válido"
                         />
+                       <TouchableOpacity 
+                            style={styles.logoutButton} 
+                            onPress={logout}
+                        >
+                            <Text style={styles.logoutText}>Cerrar Sesión</Text>
+                        </TouchableOpacity>
             </View>
         </ScrollView>
     );
@@ -80,6 +94,19 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#000',
     },
+      logoutButton: {
+    backgroundColor: '#950606',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20,
+    width: '100%',
+  },
+  logoutText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default PerfilScreen;
