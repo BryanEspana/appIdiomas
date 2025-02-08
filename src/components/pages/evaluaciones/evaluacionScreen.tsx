@@ -31,7 +31,10 @@ const preguntas = [
     {
         id: 3,
         tipo: 'imagen',
-        imagen: 'https://picsum.photos/202'
+        texto: 'Pronuncia lo que ves en la imagen',
+        imagen: 'https://picsum.photos/202',
+        respuestaCorrecta: 'cat', // Añadida respuesta correcta para validación
+        respuestaUsuario: '' // Campo para almacenar la respuesta del usuario (se llenaría con el análisis del audio)
     },
     {
         id: 4,
@@ -45,6 +48,7 @@ const preguntas = [
 const EvaluacionesScreen = () => {
     const [respuestaSeleccionada, setRespuestaSeleccionada] = useState<number | null>(null);
     const [respuestaEscrita, setRespuestaEscrita] = useState('');
+    const [respuestaAudio, setRespuestaAudio] = useState(''); // Para almacenar la respuesta del audio
     const navigation = useNavigation<StackNavigationProp<LessonsStackParamList>>();
     const [resultados, setResultados] = useState<any[]>([]);
     const [indicePregunta, setIndicePregunta] = useState(0);
@@ -55,29 +59,58 @@ const EvaluacionesScreen = () => {
     const preguntaActual = preguntas[indicePregunta];
     const totalPreguntas = preguntas.length;
     
-   const manejarSiguiente = () => {
+const manejarSiguiente = () => {
     let esCorrecta = false;
+    let respuestaUsuario = '';
 
+    // Validar que haya una respuesta según el tipo de pregunta
     if (preguntaActual.tipo === 'seleccion' && respuestaSeleccionada !== null) {
         esCorrecta = respuestaSeleccionada === preguntaActual.respuestaCorrecta;
-    } else if (preguntaActual.tipo === 'escrito') {
-        esCorrecta = preguntaActual.respuestaCorrecta !== undefined && typeof preguntaActual.respuestaCorrecta === 'string' && respuestaEscrita.trim().toLowerCase() === preguntaActual.respuestaCorrecta.toLowerCase();
+        respuestaUsuario = preguntaActual.opciones ? preguntaActual.opciones[respuestaSeleccionada] : '';
+    } else if (preguntaActual.tipo === 'escrito' && respuestaEscrita.trim() !== '') {
+        respuestaUsuario = respuestaEscrita.trim();
+        esCorrecta = respuestaEscrita.trim().toLowerCase() === String(preguntaActual.respuestaCorrecta).toLowerCase();
+    } else if (preguntaActual.tipo === 'imagen') {
+        respuestaUsuario = respuestaAudio || 'Audio enviado';
+        esCorrecta = respuestaAudio.toLowerCase() === String(preguntaActual.respuestaCorrecta).toLowerCase();
     }
 
-    setResultados(prevResultados => [
-        ...prevResultados,
-        { id: preguntaActual.id, pregunta: preguntaActual.texto, correcta: esCorrecta }
-    ]);
+    // Si no hay respuesta para preguntas de tipo escrito o selección, mostrar alerta
+    if ((preguntaActual.tipo === 'escrito' && respuestaEscrita.trim() === '') ||
+        (preguntaActual.tipo === 'seleccion' && respuestaSeleccionada === null)) {
+        Alert.alert('Error', 'Por favor, proporciona una respuesta antes de continuar');
+        return;
+    }
+
+    // Guardar el resultado
+    const nuevoResultado = {
+        id: preguntaActual.id,
+        pregunta: preguntaActual.texto,
+        respuestaUsuario: respuestaUsuario,
+        respuestaCorrecta: preguntaActual.respuestaCorrecta,
+        correcta: esCorrecta
+    };
+
+    setResultados(prevResultados => [...prevResultados, nuevoResultado]);
 
     if (indicePregunta < totalPreguntas - 1) {
         setIndicePregunta(indicePregunta + 1);
         setRespuestaSeleccionada(null);
         setRespuestaEscrita('');
+        setRespuestaAudio('');
         setProgreso((indicePregunta + 1) / totalPreguntas);
     } else {
-        navigation.navigate('ResultEvaluation', { resultados });
+        // Asegurarnos de que todos los resultados estén incluidos antes de navegar
+        navigation.navigate('ResultEvaluation', { 
+            resultados: [...resultados, nuevoResultado] 
+        });
     }
 };
+    const simularEnvioAudio = () => {
+        // Aquí simularíamos el envío y análisis del audio
+        setRespuestaAudio(String(preguntaActual.respuestaCorrecta)); // Simulación
+        Alert.alert('Audio grabado', 'Audio enviado para análisis');
+    };
     
     return (
         <View style={styles.container}>
@@ -104,8 +137,11 @@ const EvaluacionesScreen = () => {
             ) : preguntaActual.tipo === 'imagen' ? (
                 <>
                     <CustomImage source={preguntaActual.imagen} width={250} height={150} />
-                    <Text style={styles.question}>Pronuncia lo que ves en la imagen</Text>
-                    <TouchableOpacity style={styles.micButton}>
+                    <Text style={styles.question}>{preguntaActual.texto}</Text>
+                    <TouchableOpacity 
+                        style={styles.micButton}
+                        onPress={simularEnvioAudio}
+                    >
                         <CustomIcon icon={faMicrophone} size={32} color="#fff" />
                     </TouchableOpacity>
                 </>
@@ -138,7 +174,6 @@ const EvaluacionesScreen = () => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
